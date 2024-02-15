@@ -26,10 +26,10 @@ else:
     st.image('dog.gif')
 
 # Using 'with' notation:
-# with col1: 
-#     st.image('cat.gif')
-# with col2:
-#     st.image('dog.gif')
+with col1: 
+    st.image('cat.gif')
+with col2:
+    st.image('dog.gif')
 
 # st.write("\n \n ##### Here is a video of kanye west")
 # st.video('kanye.mp4')
