@@ -7,19 +7,20 @@ from PIL import Image
 # --- PATH SETTINGS ---
 current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 css_file = current_dir / "styles" / "main.css"
-resume_file = current_dir / "assets" / "cv.pdf"
+resume_file = current_dir / "assets" / "Resume Manu Sharma.pdf"
 profile_pic = current_dir / "assets" / "profile-pic-b.png"
 
 
 # --- GENERAL SETTINGS ---
 PAGE_TITLE = "Digital CV | Manu Sharma"
 PAGE_ICON = "random"
-NAME = "Manu Sharma"
 DESCRIPTION = """
-"Data-savvy student skilled in Java and Python, 
-having experience in machine learning models and data handling for informed decision-making."
+As a recent CS graduate I am eager to embark on my professional journey.
+With a strong foundation in programming and a passion for problem solving, 
+I am enthusiastically pursuing opportunities in both **software development engineering** and **data science**. 
+Whether it's crafting elegant code to build robust applications or delving into complex data analysis to derive actionable insights, I am open to starting my career in either role.
 """
-EMAIL = "sharmamanu2727@gmail.com"
+
 SOCIAL_MEDIA = {
     "LinkedIn": "https://www.linkedin.com/in/manu-sharma229/",
     "GitHub": "https://github.com/r-ocke-r",
@@ -41,7 +42,7 @@ PROJECTS = {
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON, layout="wide")
 
 
-# --- LOAD CSS, PDF & PROFIL PIC ---
+# --- LOAD CSS, PDF & PROFILE PIC ---
 with open(css_file) as f:
     st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
 with open(resume_file, "rb") as pdf_file:
@@ -53,10 +54,17 @@ col1, col2 = st.columns([1,3], gap="small")
 with col1:
     st.image(profile_pic)
 
+st.markdown("""
+    <style>
+    .large-text {
+        font-size: 4em; 
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 with col2:
-    st.title(NAME)
+    st.markdown('<p class ="large-text">Manu Sharma</p>', unsafe_allow_html=True)
     st.write(DESCRIPTION)
-    st.write(" ")
     st.write(" ")
 
 
@@ -66,7 +74,6 @@ with col2:
         file_name=resume_file.name,
         mime="application/octet-stream",
     )
-    st.write("📫", EMAIL)
 
 
 # --- SOCIAL LINKS ---
