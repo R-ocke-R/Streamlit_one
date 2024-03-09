@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 from PIL import Image
+import pandas as pd
+import time
 
 #--- Path Settings 
 # using pathlib to import Path function which helps me keep track of the 
@@ -15,6 +17,12 @@ imageLate = current_dir / "assets" / "PercentLate10.png"
 imagetwenty = current_dir / "assets" / "percent20.png"
 video = "https://www.youtube.com/watch?v=WEDIj9JBTC8&ab_channel=BigThink"
 stdocs = "https://streamlit.io"
+currency_symbols = {
+    "USD": "$",
+    "EUR": "€",
+    "GBP": "£",
+    "INR": "₹"
+}
 
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout = "wide", initial_sidebar_state="collapsed")
 
@@ -25,8 +33,13 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     with st.expander("Why ?"):
-        st.write("""This project is based on a [video](%s) by Big Think. Where William Ackman introduces finance and investing in under an hour. My mentor shared this video with me during a discussion about whether to delay my masters by a year. 
-                 You can watch the full video or from 21:30 mark, where it gets pretty exciting as Ackman highlights the importance of compound interest and the significant impact of starting early on a person's portfolio with the charts that I have captured below. """ % video)
+        st.write("""This project is based on a [video](%s) by Big Think. 
+                 Where William Ackman introduces finance and investing in under an hour.
+                 The video is pretty much a classic and has over 12M views.
+                 You can watch the full video or from the 21:30 mark, 
+                 where it gets pretty exciting as Ackman highlights the importance of compound interest and 
+                 the significant impact of starting early on a person's portfolio
+                 (also highlighted in Rule 1 below). """ % video)
 with col2:
     with st.expander("How?"):
         st.write("""This interactive web app is built using [Streamlit](%s), a Python library. 
@@ -47,7 +60,7 @@ with col3:
             st.link_button("Forbes Link", flink, help="William Ackman")
 
 #RULE 1
-with st.expander("Rule No. 1: Starting Early", True):
+with st.expander("Rule No. 1: Starting Early"):
     cl1, cl2 = st.columns(2)
     ie=Image.open(imageEarly)
     il=Image.open(imageLate)
@@ -63,44 +76,79 @@ with st.expander("What if you're warren buffet. 10% Interest Ain't enough for yo
     with cv :
         st.image(i20, caption = """Yeah that's 24 million dollars from an original $10000 investment """)
 
-#
-st.header("""So here comes my contribution (yes my aim wasn't to just show you 
-         some images from youtube) this project highlight is the iteractive
-        visualisaiton of growth of money which can help you decide 
-        how much you wanna invest at what right and at what time 
+# Here comes the hammer but it has to be very small, just a gist. 
+st.header("""Calculate and Visualize Potential Investment Growth
         """)
+st.write(""" Watching this inspiring investing video sparked my interest, I then knew I had to invest but with limited funds
+         and just one hour worth of investing knowledge, I turned to Python. 
+         Curious about potential returns, I created this app to calculate future earnings based on current investment amount.
+         With this tool, you can estimate the value of your investments over time""")
+
+with st.expander("Features"):
+    st.write(""" bullet this tool is focused on one time long term investment
+             I am currently working on a stock tool which can bring into real life stock value from past """)
+
+
+
+# Function to calculate compounded money
+def compound_money(initial_amount, rate, years):
+    compounded_money = []
+    current_amount = initial_amount
+    
+    for year in range(1, years+1):
+
+        current_amount *= (1 + rate / 100)
+        compounded_money.append(current_amount)
+    
+    return compounded_money
+
 
 
 # Currency type input
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4, col5= st.columns([7,7,7,7,2])
 with col1:
     currency_type = st.selectbox('Select Currency Type', ['USD', 'EUR', 'GBP', 'INR'])
 
 # Amount input
 with col2:
-    amount = st.number_input(f'Enter Amount in {currency_type}', step=1000)
+    amount = st.number_input(f'Enter Amount in {currency_type}', step=1000, value=5000)
 
 # Years to invest input
 with col3:
-    years = st.number_input('Enter Years to Invest', min_value=1, step=1, value=1)
+    rate = st.number_input("Enter Rate of Increase (%):", min_value=0.0, max_value=100.0, value=10.0)
 
-# Projected rate of increase input
-# rate_of_increase = st.slider('Projected Rate of Increase (%)', min_value=0.1, max_value=20.0, step=0.1)
+with col4:
+    years = st.number_input("Enter Number of Years:", value = 25)
+status = False
+def cook():
+    msg = st.toast('Calculating your portfolio...')
+    time.sleep(4)
+    msg.toast("Invested!")
+def display():
+    compounded_values = compound_money(amount, rate, int(years))
+    data = {"Year": list(range(1, len(compounded_values)+1)), "Compounded Money": compounded_values}
+    df = pd.DataFrame(data)
 
-# # Calculate compound interest
-# years_range = np.arange(1, years + 1)
-# compound_interest = amount * (1 + rate_of_increase / 100) ** years_range
 
-# # Plot growth over the years
-# fig, ax = plt.subplots()
-# ax.plot(years_range, compound_interest, marker='o', color='b')
-# ax.set_xlabel('Years')
-# ax.set_ylabel('Amount')
-# ax.set_title('Projected Growth Over the Years')
-# st.pyplot(fig)
+    columns = st.columns(5)
+    for idx, row in df.iterrows():
+        column_idx = idx % len(columns)
+        year = int(row['Year'])
+        compounded_money = row['Compounded Money']
+        percent_increase = ((compounded_money - amount) / amount) * 100
+        currency_symbol = currency_symbols.get(currency_type, "$")
+        if(idx<10):
+            columns[column_idx].metric(f"Year {year}", f"{currency_symbol}{compounded_money:.2f}", f"{percent_increase:.2f}% increase", delta_color="off")
+        
+        else:
+            columns[column_idx].metric(f"Year {year}", f"{currency_symbol}{compounded_money:.2f}", f"{percent_increase:.2f}% increase")
+with col5:
+    st.write(" ")
+    st.write(" ")
+    if st.button('Invest'):
+        cook()
+        status = True
+if (status):
+    display()
 
-# # Calculate and display metrics
-# total_growth = compound_interest[-1] - amount
-# times_increased = len(compound_interest[1:] > compound_interest[:-1])
-# st.metric('Total Growth', f'{currency_type} {total_growth:.2f}')
-# st.metric('Times Increased', times_increased)
+        
