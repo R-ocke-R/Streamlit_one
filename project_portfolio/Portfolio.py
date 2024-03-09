@@ -1,5 +1,4 @@
 from pathlib import Path
-
 import streamlit as st
 from PIL import Image
 
@@ -39,7 +38,7 @@ PROJECTS = {
 }
 
 
-st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON, layout="wide")
+st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON, layout="wide", initial_sidebar_state="collapsed")
 
 
 # --- LOAD CSS, PDF & PROFILE PIC ---
