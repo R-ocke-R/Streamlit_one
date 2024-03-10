@@ -60,33 +60,41 @@ with col3:
             st.link_button("Forbes Link", flink, help="William Ackman")
 
 #RULE 1
-with st.expander("Rule No. 1: Starting Early"):
-    cl1, cl2 = st.columns(2)
-    ie=Image.open(imageEarly)
-    il=Image.open(imageLate)
-    with cl1:
-        st.image(ie, caption = """Investing $10000 dollars at age 22 at 10% rate""")
-    with cl2:
-        st.image(il, caption = 'Investing $10000 dollars at age 32 at 10% rate')
+# with st.expander("Rule No. 1: Starting Early"):
+#     cl1, cl2 = st.columns(2)
+#     ie=Image.open(imageEarly)
+#     il=Image.open(imageLate)
+#     with cl1:
+#         st.image(ie, caption = """Investing $10000 dollars at age 22 at 10% rate""")
+#     with cl2:
+#         st.image(il, caption = 'Investing $10000 dollars at age 32 at 10% rate')
 
-# Warren 20% Percent
-with st.expander("What if you're warren buffet. 10% Interest Ain't enough for you. right?"):
-    cc,cv,cb = st.columns([1,2,1])
-    i20=Image.open(imagetwenty)
-    with cv :
-        st.image(i20, caption = """Yeah that's 24 million dollars from an original $10000 investment """)
+# # Warren 20% Percent
+# with st.expander("What if you're warren buffet. 10% Interest Ain't enough for you. right?"):
+#     cc,cv,cb = st.columns([1,2,1])
+#     i20=Image.open(imagetwenty)
+#     with cv :
+#         st.image(i20, caption = """Yeah that's 24 million dollars from an original $10000 investment """)
 
 # Here comes the hammer but it has to be very small, just a gist. 
-st.header("""Calculate and Visualize Potential Investment Growth
+st.subheader("""Calculate and Visualize Potential Investment Growth
         """)
-st.write(""" Watching this inspiring investing video sparked my interest, I then knew I had to invest but with limited funds
+st.write(""" Watching this ⏫ inspiring investing video sparked my interest, I then knew I had to invest but with limited funds
          and just one hour worth of investing knowledge, I turned to Python. 
          Curious about potential returns, I created this app to calculate future earnings based on current investment amount.
          With this tool, you can estimate the value of your investments over time""")
 
-with st.expander("Features"):
-    st.write(""" bullet this tool is focused on one time long term investment
-             I am currently working on a stock tool which can bring into real life stock value from past """)
+with st.expander("Features", True):
+    #st.write(""" bullet this tool is focused on one time long term investment
+    #         I am currently working on a stock tool which can bring into real life stock value from past """)
+    st.markdown(""" 
+            You can change the 4 input box values to fit your investing need, once you are done, click Invest !
+            - CurrencyType
+            - Amount to Invest
+            - Expected Rate %
+            - Years to Project
+            """)
+
 
 
 
@@ -103,32 +111,20 @@ def compound_money(initial_amount, rate, years):
     return compounded_money
 
 
-
-# Currency type input
-col1, col2, col3, col4, col5= st.columns([7,7,7,7,2])
-with col1:
-    currency_type = st.selectbox('Select Currency Type', ['USD', 'EUR', 'GBP', 'INR'])
-
-# Amount input
-with col2:
-    amount = st.number_input(f'Enter Amount in {currency_type}', step=1000, value=5000)
-
-# Years to invest input
-with col3:
-    rate = st.number_input("Enter Rate of Increase (%):", min_value=0.0, max_value=100.0, value=10.0)
-
-with col4:
-    years = st.number_input("Enter Number of Years:", value = 25)
-status = False
 def cook():
+    """ Gives a toast message and a delay before the calculations appear """
     msg = st.toast('Calculating your portfolio...')
-    time.sleep(4)
+    time.sleep(3)
+    msg = st.toast('Please wait while we calculate...')
+    time.sleep(3)
     msg.toast("Invested!")
 def display():
+    """ Calculates and displays year-wise amounts"""
     compounded_values = compound_money(amount, rate, int(years))
     data = {"Year": list(range(1, len(compounded_values)+1)), "Compounded Money": compounded_values}
     df = pd.DataFrame(data)
-
+    global final_amount
+    final_amount = df.iloc[-1]['Compounded Money']
 
     columns = st.columns(5)
     for idx, row in df.iterrows():
@@ -136,12 +132,34 @@ def display():
         year = int(row['Year'])
         compounded_money = row['Compounded Money']
         percent_increase = ((compounded_money - amount) / amount) * 100
+        global currency_symbol
         currency_symbol = currency_symbols.get(currency_type, "$")
         if(idx<10):
             columns[column_idx].metric(f"Year {year}", f"{currency_symbol}{compounded_money:.2f}", f"{percent_increase:.2f}% increase", delta_color="off")
-        
         else:
             columns[column_idx].metric(f"Year {year}", f"{currency_symbol}{compounded_money:.2f}", f"{percent_increase:.2f}% increase")
+        # if(idx!=0 and (idx-1)%10==0):
+        time.sleep(0.2)
+def notify():
+    """ Gives a success message in the end of all the displayed year-wise amounts"""
+    if currency_symbol == '$':
+        st.success("Your initial investment of USD {:.2f} got converted to USD {:.2f}.".format(amount, final_amount))
+    else:
+        st.success("Your initial investment of {}{:.2f} got converted to {}{:.2f}.".format(currency_symbol, amount, currency_symbol, final_amount))
+
+
+# Currency type input
+col1, col2, col3, col4, col5= st.columns([7,7,7,7,2])
+with col1:
+    currency_type = st.selectbox('Select Currency Type', ['USD', 'EUR', 'GBP', 'INR'])
+with col2:
+    amount = st.number_input(f'Enter Amount in {currency_type}', step=1000, value=5000)
+with col3:
+    rate = st.number_input("Enter Rate of Increase (%):", min_value=0.0, max_value=100.0, value=10.0)
+with col4:
+    years = st.number_input("Enter Number of Years:", value = 25)
+#with the status symbol, we control the flow of the calculations, which is done via the display function, done only once the user presses invest.
+status = False
 with col5:
     st.write(" ")
     st.write(" ")
@@ -150,5 +168,6 @@ with col5:
         status = True
 if (status):
     display()
+    notify()
 
         
