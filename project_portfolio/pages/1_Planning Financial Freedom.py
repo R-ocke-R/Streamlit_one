@@ -10,7 +10,7 @@ import time
 # using pathlib to import Path function which helps me keep track of the 
 # current directory, making my code resilient/ poratble.
 page_title = "Investing"
-page_icon = "random"
+page_icon = "💹"
 current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 imageEarly = current_dir / "assets" / "PercentEarly10.png"
 imageLate = current_dir / "assets" / "PercentLate10.png"
@@ -27,7 +27,6 @@ currency_symbols = {
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout = "wide", initial_sidebar_state="collapsed")
 
 st.title('Investing 101: Visualizing the Value of Time')
-#st.markdown("Hey There! This project Investing 101 is an web app that is created and hosted ")
 
 col1, col2, col3 = st.columns(3)
 
@@ -59,6 +58,7 @@ with col3:
             flink= "https://www.forbes.com/profile/william-ackman/?sh=2a6adb10298d"
             st.link_button("Forbes Link", flink, help="William Ackman")
 
+
 #RULE 1
 # with st.expander("Rule No. 1: Starting Early"):
 #     cl1, cl2 = st.columns(2)
@@ -85,8 +85,6 @@ st.write(""" Watching this ⏫ inspiring investing video sparked my interest, I 
          With this tool, you can estimate the value of your investments over time""")
 
 with st.expander("Features", True):
-    #st.write(""" bullet this tool is focused on one time long term investment
-    #         I am currently working on a stock tool which can bring into real life stock value from past """)
     st.markdown(""" 
             You can change the 4 input box values to fit your investing need, once you are done, click Invest !
             - CurrencyType
@@ -95,11 +93,8 @@ with st.expander("Features", True):
             - Years to Project
             """)
 
-
-
-
-# Function to calculate compounded money
 def compound_money(initial_amount, rate, years):
+    """Function to calculate compounded money"""
     compounded_money = []
     current_amount = initial_amount
     
@@ -109,8 +104,6 @@ def compound_money(initial_amount, rate, years):
         compounded_money.append(current_amount)
     
     return compounded_money
-
-
 def cook():
     """ Gives a toast message and a delay before the calculations appear """
     msg = st.toast('Calculating your portfolio...')
@@ -138,8 +131,7 @@ def display():
             columns[column_idx].metric(f"Year {year}", f"{currency_symbol}{compounded_money:.2f}", f"{percent_increase:.2f}% increase", delta_color="off")
         else:
             columns[column_idx].metric(f"Year {year}", f"{currency_symbol}{compounded_money:.2f}", f"{percent_increase:.2f}% increase")
-        # if(idx!=0 and (idx-1)%10==0):
-        time.sleep(0.2)
+        time.sleep(0.3)
 def notify():
     """ Gives a success message in the end of all the displayed year-wise amounts"""
     if currency_symbol == '$':

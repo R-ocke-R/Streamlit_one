@@ -4,3 +4,10 @@ I can use streamlit as a DSA and project portfolio websitee.
 1. AS DSA PORTFOLIO WEBSITE:
 can add each new topic of DSA, their questions, links,
 and have a personal highly modifiable database.
+
+
+2. MonkeyType Data Analytics
+
+3. Use Web Scraping on company JD's and have a dashboard analysis of skills that were in demand for 
+on campus placements this season.
+or use that data to tell what to learn.
