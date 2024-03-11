@@ -141,27 +141,30 @@ def projects():
 def education():
     st.write('\n')
     st.subheader("Education:")
-    st.write("👨‍🎓", "**Bachelor of Technology | CSE**")
-    st.write("2020 - Present")
-    st.write(
+    col1, col2 = st.columns([4, 1.5])
+    with col1:
+        st.write("👨‍🎓", "**Bachelor of Technology | CSE**")
+        st.write("2020 - Present")
+        st.write(
+            """
+        - ► Specialized in AI and ML, completed respective coursework and gained practical experience through project based implementations.
+        - ► Coursework: Database Management Systems, Operating Systems, Computer Networks, Data Structures and Algorithms, etc.
+        - ► Actively participated in various Hackathons and coding contests.
+        - ► CPI : 8.5
         """
-    - ► Specialized in Artificial Intelligence and Machine Learning, by completed coursework and gaining practical experience through project based implementations.
-    - ► Coursework: Database Management Systems, Operating Systems, Computer Networks, Data Structures and Algorithms, etc.
-    - ► Actively participated in various Hackathons and coding contests.
-    - ► CPI : 8.5
-    """
-    )
-    st.write('\n')
-    st.write("🏫", "**High School | Science**")
-    st.write("2020")
-    st.write(
+        )
+        st.write('\n')
+        st.write("🏫", "**High School | Science**")
+        st.write("2020")
+        st.write(
+            """
+        - ► Choose PCM + Computer Science as my High School Subjects and got an aggregate of 91%.
+        - ► Guided a team of 20 students as an event head of a mobile gaming contest, at a state level technical fest (Techno-Fi, 2020) .
+        - ► Successfully managed academic responsibilities while nurturing my passion for football and athletics.
         """
-    - ► Choose PCM + Computer Science as my High School Subjects and got an aggregate of 91%.
-    - ► Guided a team of 20 students as an event head of a mobile gaming contest, at a state level technical fest (Techno-Fi, 2020) .
-    - ► Successfully managed academic responsibilities while nurturing my passion for football and athletics.
-    """
-    )
-
+        )
+    with col2:
+        st.lottie("https://lottie.host/bbc58d2e-9eaf-4c8c-8354-f98977e8cc19/qpzkCwQW6I.json")
 
 
     # Displaying bachelor's degree information in the first column
@@ -183,36 +186,37 @@ def research():
     st.write('\n')
     st.subheader("Research Work:")
     st.write("---")
-    st.write("📄", "**Optimising Feature Selection: A Comparative Study of mRMR-Boruta/RFE Hybrid Approach**")
-    st.write("March 2023")
-    st.write(
+    col1, col2=st.columns([5, 1])
+
+    with col1:
+            
+        st.write("📄", "**Optimising Feature Selection: A Comparative Study of mRMR-Boruta/RFE Hybrid Approach**")
+        st.write("March 2023")
+        st.write(
+            """
+        - ► Contributed to a research in Machine Learning: Data Mining Domain
+        - ► Proposed a hybrid feature selection model combining mRMR and Boruta/RFE to enhance data preprocessing
+        - ► Using the novel approach, classification accuracy was increased from 90.21% using earlier techniques to 95.83%
+        - ► Worked under the guidance of Prof. Dilip Kumar Sharma, Dean (International Relations) GLA University.
+        - ► The paper was accepted for publication in the ISCON 2023 conference. Link.
+        - ► https://ieeexplore.ieee.org/document/10112125
         """
-    - ► Contributed to a research in Machine Learning: Data Mining Domain
-    - ► Proposed a hybrid feature selection model combining mRMR and Boruta/RFE to enhance data preprocessing
-    - ► Using the novel approach, classification accuracy was increased from 90.21% using earlier techniques to 95.83%
-    - ► Worked under the guidance of Prof. Dilip Kumar Sharma, Dean (International Relations) GLA University.
-    - ► The paper was accepted for publication in the ISCON 2023 conference. Link.
-    - ► https://ieeexplore.ieee.org/document/10112125
-    """
-    )
+        )
+    with col2:
+        st.lottie("https://lottie.host/5cb583ed-32c0-4b0b-b548-d7a78775fb61/TAT6FCn5q3.json")
+
 
 
 
 hero()
 with st.container(border=True, height=90):
     social()
-
+st.container(border=False, height=40)
 education()
 skill_tab(info, skill_col_size)
 research()
-#experience()
-#work()
-projects()
 
-
-col1, col2=st.columns([5, 1])
-with col2:
-    st.lottie("https://lottie.host/f839153b-c982-47c6-8b15-c1f600fc751e/UIXYBRQRXW.json")
 
 
     
+projects()
