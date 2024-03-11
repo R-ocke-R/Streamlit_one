@@ -1,43 +1,13 @@
 from pathlib import Path
 import streamlit as st
 from PIL import Image
+import streamlit_lottie
+from constants import *
 
 
-# --- PATH SETTINGS ---
-current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-css_file = current_dir / "styles" / "main.css"
-resume_file = current_dir / "assets" / "Resume Manu Sharma.pdf"
-profile_pic = current_dir / "assets" / "profile-pic-b.png"
-
-
-# --- GENERAL SETTINGS ---
+# Page Config
 PAGE_TITLE = "Digital CV | Manu Sharma"
-PAGE_ICON = "random"
-DESCRIPTION = """
-As a recent CS graduate I am eager to embark on my professional journey.
-With a strong foundation in programming and a passion for problem solving, 
-I am enthusiastically pursuing opportunities in both **software development engineering** and **data science**. 
-Whether it's crafting elegant code to build robust applications or delving into complex data analysis to derive actionable insights, I am open to starting my career in either role.
-"""
-
-SOCIAL_MEDIA = {
-    "LinkedIn": "https://www.linkedin.com/in/manu-sharma229/",
-    "GitHub": "https://github.com/r-ocke-r",
-    "Twitter": "https://twitter.com/Manusharma79105",
-    "Leetcode": "https://leetcode.com/r_ocke_r"
-}
-platform_icons = {
-    "LinkedIn": "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png",
-    "GitHub": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-    "Twitter": "https://cdn-icons-png.flaticon.com/512/124/124021.png",
-    "Leetcode": "https://assets.leetcode.com/static_assets/public/icons/favicon.ico"
-}
-PROJECTS = {
-    "🏆 Sales Dashboard - Comparing sales across three stores": "https://youtu.be/Sb0A9i6d320",
-    "🏆 Income and Expense Tracker - Web app with NoSQL database": "https://youtu.be/3egaMfE9388",
-}
-
-
+PAGE_ICON = "🤖"
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON, layout="wide", initial_sidebar_state="collapsed")
 
 
@@ -49,108 +19,200 @@ with open(resume_file, "rb") as pdf_file:
 profile_pic = Image.open(profile_pic)
 
 # --- HERO SECTION ---
-col1, col2 = st.columns([1,3], gap="small")
-with col1:
-    st.image(profile_pic)
+def hero():
+    col1, col2 = st.columns([1,3], gap="small")
+    with col1:
+        st.image(profile_pic)
 
-st.markdown("""
-    <style>
-    .large-text {
-        font-size: 4em; 
-    }
-    </style>
-""", unsafe_allow_html=True)
+    st.markdown("""
+        <style>
+        .large-text {
+            font-size: 4em; 
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
-with col2:
-    st.markdown('<p class ="large-text">Manu Sharma</p>', unsafe_allow_html=True)
-    st.write(DESCRIPTION)
-    st.write(" ")
-
-
-    st.download_button(
-        label=" 📄 Download Resume",
-        data=PDFbyte,
-        file_name=resume_file.name,
-        mime="application/octet-stream",
-    )
+    with col2:
+        st.markdown('<p class ="large-text">Manu Sharma</p>', unsafe_allow_html=True)
+        st.write(DESCRIPTION)
+        st.write(" ")
 
 
+        st.download_button(
+            label=" 📄 Download Resume",
+            data=PDFbyte,
+            file_name=resume_file.name,
+            mime="application/octet-stream",
+        )
+
+
+def skill_tab(info, skill_col_size):
+    st.write('\n')
+    st.write('\n')
+    st.subheader("Skills:")
+    st.write("---")
+    rows = len(info['skills']) // skill_col_size
+    if len(info['skills']) % skill_col_size != 0:
+        rows += 1
+    
+    skills = iter(info['skills'])
+    for row in range(rows):
+        columns = st.columns(skill_col_size)
+        for column, skill in zip(columns, skills):
+            column.button(skill)
+
+     
 # --- SOCIAL LINKS ---
-st.write('\n')
-cols = st.columns(len(SOCIAL_MEDIA))
-for index, (platform, link) in enumerate(SOCIAL_MEDIA.items()):
-    cols[index].write(f"[{platform}]({link})")
+def social():
+    st.write('\n')
+    col_ratios = [1,3,3,3,3]
+    cols = st.columns(col_ratios)
+    st.write('\n')
+    for index, (platform, link) in enumerate(SOCIAL_MEDIA.items()):
+        cols[index+1].write(f"[{platform}]({link})")
     
 
 # --- EXPERIENCE & QUALIFICATIONS ---
-    
-st.write('\n')
-st.subheader("Experience & Qulifications")
-st.write(
+def experience():
+    st.write('\n')
+    st.subheader("Experience & Qualifications")
+    st.write(
+        """
+    - ✔️ Strong hands on experience and knowledge in Python and Excel
+    - ✔️ Good understanding of statistical principles and their respective applications
+    - ✔️ Excellent team-player and displaying strong sense of initiative on tasks
     """
-- ✔️ Strong hands on experience and knowledge in Python and Excel
-- ✔️ Good understanding of statistical principles and their respective applications
-- ✔️ Excellent team-player and displaying strong sense of initiative on tasks
-"""
-)
+    )
 
 
-# --- SKILLS ---
-st.write('\n')
-st.subheader("Hard Skills")
-st.write(
+
+def work():
+        
+    # --- WORK HISTORY ---
+    st.write('\n')
+    st.subheader("Work History")
+    st.write("---")
+
+    # --- JOB 1
+    st.write("🚧", "**Senior Data Analyst | Ross Industries**")
+    st.write("02/2020 - Present")
+    st.write(
+        """
+    - ► Used PowerBI and SQL to redeﬁne and track KPIs surrounding marketing initiatives, and supplied recommendations to boost landing page conversion rate by 38%
+    - ► Led a team of 4 analysts to brainstorm potential marketing and sales improvements, and implemented A/B tests to generate 15% more client leads
+    - ► Redesigned data model through iterations that improved predictions by 12%
     """
-- 👩‍💻 Programming: Python (Scikit-learn, Pandas), SQL, VBA
-- 📊 Data Visulization: PowerBi, MS Excel, Plotly
-- 📚 Modeling: Logistic regression, linear regression, decition trees
-- 🗄️ Databases: Postgres, MongoDB, MySQL
-"""
-)
+    )
 
-
-# --- WORK HISTORY ---
-st.write('\n')
-st.subheader("Work History")
-st.write("---")
-
-# --- JOB 1
-st.write("🚧", "**Senior Data Analyst | Ross Industries**")
-st.write("02/2020 - Present")
-st.write(
+    # --- JOB 2
+    st.write('\n')
+    st.write("🚧", "**Data Analyst | Liberty Mutual Insurance**")
+    st.write("01/2018 - 02/2022")
+    st.write(
+        """
+    - ► Built data models and maps to generate meaningful insights from customer data, boosting successful sales eﬀorts by 12%
+    - ► Modeled targets likely to renew, and presented analysis to leadership, which led to a YoY revenue increase of $300K
+    - ► Compiled, studied, and inferred large amounts of data, modeling information to drive auto policy pricing
     """
-- ► Used PowerBI and SQL to redeﬁne and track KPIs surrounding marketing initiatives, and supplied recommendations to boost landing page conversion rate by 38%
-- ► Led a team of 4 analysts to brainstorm potential marketing and sales improvements, and implemented A/B tests to generate 15% more client leads
-- ► Redesigned data model through iterations that improved predictions by 12%
-"""
-)
+    )
 
-# --- JOB 2
-st.write('\n')
-st.write("🚧", "**Data Analyst | Liberty Mutual Insurance**")
-st.write("01/2018 - 02/2022")
-st.write(
+    # --- JOB 3
+    st.write('\n')
+    st.write("🚧", "**Data Analyst | Chegg**")
+    st.write("04/2015 - 01/2018")
+    st.write(
+        """
+    - ► Devised KPIs using SQL across company website in collaboration with cross-functional teams to achieve a 120% jump in organic traﬃc
+    - ► Analyzed, documented, and reported user survey results to improve customer communication processes by 18%
+    - ► Collaborated with analyst team to oversee end-to-end process surrounding customers' return data
     """
-- ► Built data models and maps to generate meaningful insights from customer data, boosting successful sales eﬀorts by 12%
-- ► Modeled targets likely to renew, and presented analysis to leadership, which led to a YoY revenue increase of $300K
-- ► Compiled, studied, and inferred large amounts of data, modeling information to drive auto policy pricing
-"""
-)
-
-# --- JOB 3
-st.write('\n')
-st.write("🚧", "**Data Analyst | Chegg**")
-st.write("04/2015 - 01/2018")
-st.write(
-    """
-- ► Devised KPIs using SQL across company website in collaboration with cross-functional teams to achieve a 120% jump in organic traﬃc
-- ► Analyzed, documented, and reported user survey results to improve customer communication processes by 18%
-- ► Collaborated with analyst team to oversee end-to-end process surrounding customers' return data
-"""
-)
+    )
 
 # --- Projects & Accomplishments ---
-st.write('\n')
-st.subheader("Projects & Accomplishments")
-st.write("---")
-for project, link in PROJECTS.items():
-    st.write(f"[{project}]({link})")
+def projects():
+
+    st.write('\n')
+    st.subheader("Projects & Accomplishments")
+    st.write("---")
+    for project, link in PROJECTS.items():
+        st.write(f"[{project}]({link})")
+
+
+def education():
+    st.write('\n')
+    st.subheader("Education:")
+    st.write("👨‍🎓", "**Bachelor of Technology | CSE**")
+    st.write("2020 - Present")
+    st.write(
+        """
+    - ► Specialized in Artificial Intelligence and Machine Learning, by completed coursework and gaining practical experience through project based implementations.
+    - ► Coursework: Database Management Systems, Operating Systems, Computer Networks, Data Structures and Algorithms, etc.
+    - ► Actively participated in various Hackathons and coding contests.
+    - ► CPI : 8.5
+    """
+    )
+    st.write('\n')
+    st.write("🏫", "**High School | Science**")
+    st.write("2020")
+    st.write(
+        """
+    - ► Choose PCM + Computer Science as my High School Subjects and got an aggregate of 91%.
+    - ► Guided a team of 20 students as an event head of a mobile gaming contest, at a state level technical fest (Techno-Fi, 2020) .
+    - ► Successfully managed academic responsibilities while nurturing my passion for football and athletics.
+    """
+    )
+
+
+
+    # Displaying bachelor's degree information in the first column
+    # with col1:
+    #     st.subheader("Bachelors")
+    #     st.write(f"- **Degree:** {bachelors_info['degree']}")
+    #     st.write(f"- **Field of Study:** {bachelors_info['field_of_study']}")
+    #     st.write(f"- **University:** {bachelors_info['university']}")
+    #     st.write(f"- **Year:** {bachelors_info['year']}")
+
+    # # Displaying high school information in the second column with a bigger font size
+    # with col2:
+    #     st.write("**High School**")
+    #     st.markdown(f"## {high_school_info['school']}")
+    #     st.write(f"- **Year:** {high_school_info['year']}")
+
+
+def research():
+    st.write('\n')
+    st.subheader("Research Work:")
+    st.write("---")
+    st.write("📄", "**Optimising Feature Selection: A Comparative Study of mRMR-Boruta/RFE Hybrid Approach**")
+    st.write("March 2023")
+    st.write(
+        """
+    - ► Contributed to a research in Machine Learning: Data Mining Domain
+    - ► Proposed a hybrid feature selection model combining mRMR and Boruta/RFE to enhance data preprocessing
+    - ► Using the novel approach, classification accuracy was increased from 90.21% using earlier techniques to 95.83%
+    - ► Worked under the guidance of Prof. Dilip Kumar Sharma, Dean (International Relations) GLA University.
+    - ► The paper was accepted for publication in the ISCON 2023 conference. Link.
+    - ► https://ieeexplore.ieee.org/document/10112125
+    """
+    )
+
+
+
+hero()
+with st.container(border=True, height=90):
+    social()
+
+education()
+skill_tab(info, skill_col_size)
+research()
+#experience()
+#work()
+projects()
+
+
+col1, col2=st.columns([5, 1])
+with col2:
+    st.lottie("https://lottie.host/f839153b-c982-47c6-8b15-c1f600fc751e/UIXYBRQRXW.json")
+
+
+    

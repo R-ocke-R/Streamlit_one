@@ -1,6 +1,6 @@
 import streamlit as st
 from pathlib import Path
-
+import streamlit_lottie
 
 current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 css_file = current_dir / "css" / "main.css"
@@ -36,7 +36,6 @@ def feedback_form():
 
     st.container(border=False, height = 200, )
     st.subheader(":mailbox: Please share any thoughts, ideas, or suggestions you have. 💡")
-    
     formsubmitio()
 
     # name = st.text_input("Your Name 👤", "")
@@ -51,4 +50,9 @@ def feedback_form():
     #         st.warning("Oops! It looks like you missed filling out some fields. Please make sure to provide your name, email, and feedback. 🛑")
 
 if __name__ == "__main__":
-    feedback_form()
+    col1, col2 = st.columns([4, 2])
+    with col1:
+        feedback_form()
+    with col2:
+        with st.container(border=False, height=450):
+            st.lottie("https://lottie.host/d5afd3f1-4b92-4cb2-802b-1ed6f0143b65/9VVoumSHNv.json")
